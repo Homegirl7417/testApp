@@ -15,21 +15,22 @@ import {
 } from 'react-native';
 // Button 사용금지
 
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
-function FirstScreen(){
+function FirstScreen({ navigation }){
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      {/* <TouchableOpacity
+      <Text>Firsth Screen</Text>
+      <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Details")}
+        onPress={() => navigation.navigate("FirstDetail")}
       >
         <View>
-          <Text style={{ fontSize: 30, color: 'red' }}>Go To Hell</Text>
+          <Text style={{ fontSize: 30, color: 'red' }}>First Detail</Text>
         </View>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   )
 }
@@ -61,17 +62,35 @@ function FifthScreen() {
     </View>    
   );
 }
+function FirstDetail(){
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>First Detail</Text>
+    </View>
+  )
+}
+
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+function HomeTabs() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="First" component={FirstScreen} />
+      <Tab.Screen name="Second" component={SecondScreen} />
+      <Tab.Screen name="Third" component={ThirdScreen} />
+      <Tab.Screen name="Forth" component={ForthScreen} />
+      <Tab.Screen name="Fifth" component={FifthScreen} />
+    </Tab.Navigator>
+  );
+}
 function App() {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name="First" component={FirstScreen} />
-        <Tab.Screen name="Second" component={SecondScreen} />
-        <Tab.Screen name="Third" component={ThirdScreen} />
-        <Tab.Screen name="Forth" component={ForthScreen} />
-        <Tab.Screen name="Fifth" component={FifthScreen} />
-      </Tab.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="FirstDetail" component={FirstDetail} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
