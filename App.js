@@ -18,6 +18,7 @@ import {
 import { NavigationContainer, StackActions } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function FirstScreen({ navigation }){
   return (
@@ -75,7 +76,25 @@ const Stack = createStackNavigator();
 
 function HomeTabs() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "First") {
+            iconName = focused ? 'meho' : 'meh'; 
+          } else if (route.name === "Second") {
+            iconName = focused ? 'meho' : 'meh'; 
+          } else if (route.name === "Third") {
+            iconName = focused ? 'meho' : 'meh'; 
+          } else if (route.name === "Forth") {
+            iconName = focused ? 'meho' : 'meh'; 
+          } else if (route.name === "Fifth") {
+            iconName = focused ? 'meho' : 'meh'; 
+          }
+          return <AntDesign name={iconName} size={size} color={color} />;
+        }
+      })}
+    >
       <Tab.Screen name="First" component={FirstScreen} />
       <Tab.Screen name="Second" component={SecondScreen} />
       <Tab.Screen name="Third" component={ThirdScreen} />
