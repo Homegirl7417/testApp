@@ -1,153 +1,86 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+import React, { Component } from 'react';
+import { Button, Linking, StyleSheet, Text, View } from 'react-native';
 
-import React from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView
-} from 'react-native';
-// Button 사용금지
+import DeepLinking from 'react-native-deep-linking';
 
-import { NavigationContainer, StackActions } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+export default class App extends Component {
+  state = {
+    response: {},
+  };
 
-function FirstScreen({ navigation }){
-  return (
-    <SafeAreaView>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Firsth Screen</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.navigate("FirstDetail")}
-        >
-          <View>
-            <Text style={{ fontSize: 25, color: 'red' }}>First Detail</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
-  )
-}
-function SecondScreen() {
-  return (
-    <SafeAreaView>
+  componentDidMount() {
+    DeepLinking.addScheme('example://');
+    Linking.addEventListener('url', this.handleUrl);
+
+    DeepLinking.addRoute('/test', (response) => {
+      // example://test
+      this.setState({ response });
+    });
+
+    DeepLinking.addRoute('/test/:id', (response) => {
+      // example://test/23
+      this.setState({ response });
+    });
+
+    DeepLinking.addRoute('/test/:id/details', (response) => {
+      // example://test/100/details
+      this.setState({ response });
+    });
+
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        Linking.openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
+  }
+
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleUrl);
+  }
+
+  handleUrl = ({ url }) => {
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        DeepLinking.evaluateUrl(url);
+      }
+    });
+  }
+
+  render() {
+    return (
       <View style={styles.container}>
-        <Text style={styles.title}>SecondScreen</Text>
+        <View style={styles.container}>
+          <Button
+            onPress={() => Linking.openURL('example://test')}
+            title="Open example://test"
+          />
+          <Button
+            onPress={() => Linking.openURL('example://test/23')}
+            title="Open example://test/23"
+          />
+          <Button
+            onPress={() => Linking.openURL('example://test/100/details')}
+            title="Open example://test/100/details"
+          />
+        </View>
+        <View style={styles.container}>
+          <Text style={styles.text}>{this.state.response.scheme ? `Url scheme: ${this.state.response.scheme}` : ''}</Text>
+          <Text style={styles.text}>{this.state.response.path ? `Url path: ${this.state.response.path}` : ''}</Text>
+          <Text style={styles.text}>{this.state.response.id ? `Url id: ${this.state.response.id}` : ''}</Text>
+        </View>
       </View>
-    </SafeAreaView>
-  );
-}
-function ThirdScreen() {
-  return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.title}>ThirdScreen</Text>
-      </View>
-    </SafeAreaView>
-  );
-}
-function ForthScreen() {
-  return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.title}>ForthScreen</Text>
-      </View>    
-    </SafeAreaView>
-  );
-}
-function FifthScreen() {
-  return (
-    <SafeAreaView>
-      <View style={styles.container}>
-        <Text style={styles.title}>FifthScreen</Text>
-      </View> 
-    </SafeAreaView>   
-  );
-}
-function FirstDetail(){
-  return (
-    <SafeAreaView>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>First Detail</Text>
-      </View>
-    </SafeAreaView>
-  )
-}
-
-const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-function HomeTabs() {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
-          if (route.name === "First") {
-            iconName = focused ? 'meho' : 'meh'; 
-          } else if (route.name === "Second") {
-            iconName = focused ? 'meho' : 'meh'; 
-          } else if (route.name === "Third") {
-            iconName = focused ? 'meho' : 'meh'; 
-          } else if (route.name === "Forth") {
-            iconName = focused ? 'meho' : 'meh'; 
-          } else if (route.name === "Fifth") {
-            iconName = focused ? 'meho' : 'meh'; 
-          }
-          return <AntDesign name={iconName} size={size} color={color} />;
-        }
-      })}
-    >
-      <Tab.Screen 
-        name="First" 
-        component={FirstScreen} 
-      />
-      <Tab.Screen name="Second" component={SecondScreen} />
-      <Tab.Screen name="Third" component={ThirdScreen} />
-      <Tab.Screen name="Forth" component={ForthScreen} />
-      <Tab.Screen name="Fifth" component={FifthScreen} />
-    </Tab.Navigator>
-  );
-}
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeTabs}/>
-        <Stack.Screen name="FirstDetail" component={FirstDetail} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-  container : {
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center'
-  },
-  title: {
-    fontSize: 30
-  },
-  button: {
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10,
-    width: 200,
-    height: 50,
-    marginTop: 10,
-    borderRadius: 15
-  }
+  },
+  text: {
+    fontSize: 18,
+    margin: 10,
+  },
 });
-
-export default App;
