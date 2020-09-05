@@ -28,10 +28,10 @@ function FirstScreen({ navigation }){
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
-        <Text>Firsth Screen</Text>
+        <Text>First Screen</Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => Linking.openURL('example://test')}
+          onPress={() => Linking.openURL('example://FirstDetail')} // 내부 페이지로 이동
         >
           <View>
             <Text style={{ fontSize: 25, color: 'red' }}>First Detail</Text>
@@ -71,8 +71,16 @@ function ForthScreen() {
 function FifthScreen() {
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={styles.container}>
         <Text style={styles.title}>FifthScreen</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => Linking.openURL('https://www.google.com/')} // 외부 크롬앱으로 이동
+        >
+          <View>
+            <Text style={{ fontSize: 25, color: 'red' }}>Chrome</Text>
+          </View>
+        </TouchableOpacity>
       </View> 
     </SafeAreaView>   
   );
@@ -127,14 +135,14 @@ class App extends React.Component {
     response: {},
   }
   componentDidMount() {
-    const supportedURL = "https://google.com";
     DeepLinking.addScheme('example://');
     Linking.addEventListener('url', this.handleUrl);
 
-    DeepLinking.addRoute('/test', (response) => {
+    DeepLinking.addRoute('/FirstDetail', (response) => {
       // example://test
       console.log("!! Clicked !! / res:",response);
-      this.setState({ response });
+      this.props.navigation.navigate('FirstDetail');
+      // this.setState({ response });
     });
     Linking.getInitialURL().then((url) => {
       if (url) {
@@ -151,7 +159,6 @@ class App extends React.Component {
         <Stack.Navigator>
           <Stack.Screen name="Home" component={HomeTabs}/>
           <Stack.Screen name="FirstDetail" component={FirstDetail} />
-          <Stack.Screen name="test" component={FirstDetail} />
         </Stack.Navigator>
       </NavigationContainer>
     );

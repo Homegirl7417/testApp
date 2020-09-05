@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Linking, StyleSheet, Text, View } from 'react-native';
-
 import DeepLinking from 'react-native-deep-linking';
 
 export default class App extends Component {
@@ -13,6 +12,7 @@ export default class App extends Component {
     Linking.addEventListener('url', this.handleUrl);
 
     DeepLinking.addRoute('/test', (response) => {
+      console.log('res: ', response);
       // example://test
       this.setState({ response });
     });
@@ -44,7 +44,7 @@ export default class App extends Component {
         DeepLinking.evaluateUrl(url);
       }
     });
-  }
+  }s
 
   render() {
     return (
