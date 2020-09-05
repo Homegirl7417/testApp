@@ -11,7 +11,8 @@ import {
   StyleSheet,
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  SafeAreaView
 } from 'react-native';
 // Button 사용금지
 
@@ -22,52 +23,64 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 
 function FirstScreen({ navigation }){
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Firsth Screen</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate("FirstDetail")}
-      >
-        <View>
-          <Text style={{ fontSize: 30, color: 'red' }}>First Detail</Text>
-        </View>
-      </TouchableOpacity>
-    </View>
+    <SafeAreaView>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Firsth Screen</Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate("FirstDetail")}
+        >
+          <View>
+            <Text style={{ fontSize: 25, color: 'red' }}>First Detail</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   )
 }
 function SecondScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>SecondScreen</Text>
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text style={styles.title}>SecondScreen</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 function ThirdScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>ThirdScreen</Text>
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text style={styles.title}>ThirdScreen</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 function ForthScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>ForthScreen</Text>
-    </View>    
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text style={styles.title}>ForthScreen</Text>
+      </View>    
+    </SafeAreaView>
   );
 }
 function FifthScreen() {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>FifthScreen</Text>
-    </View>    
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Text style={styles.title}>FifthScreen</Text>
+      </View> 
+    </SafeAreaView>   
   );
 }
 function FirstDetail(){
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>First Detail</Text>
-    </View>
+    <SafeAreaView>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>First Detail</Text>
+      </View>
+    </SafeAreaView>
   )
 }
 
@@ -95,7 +108,10 @@ function HomeTabs() {
         }
       })}
     >
-      <Tab.Screen name="First" component={FirstScreen} />
+      <Tab.Screen 
+        name="First" 
+        component={FirstScreen} 
+      />
       <Tab.Screen name="Second" component={SecondScreen} />
       <Tab.Screen name="Third" component={ThirdScreen} />
       <Tab.Screen name="Forth" component={ForthScreen} />
@@ -107,7 +123,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="Home" component={HomeTabs}/>
         <Stack.Screen name="FirstDetail" component={FirstDetail} />
       </Stack.Navigator>
     </NavigationContainer>
@@ -115,10 +131,22 @@ function App() {
 }
 
 const styles = StyleSheet.create({
+  container : {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center'
+  },
+  title: {
+    fontSize: 30
+  },
   button: {
     alignItems: 'center',
     backgroundColor: '#DDDDDD',
-    padding: 10
+    padding: 10,
+    width: 200,
+    height: 50,
+    marginTop: 10,
+    borderRadius: 15
   }
 });
 
