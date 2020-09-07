@@ -31,7 +31,7 @@ function FirstScreen({ navigation }){
         <Text>First Screen</Text>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => Linking.openURL('example://FirstDetail')} // 내부 페이지로 이동
+          onPress={() => Linking.openURL('testapp://FirstDetail')} // 내부 페이지로 이동
         >
           <View>
             <Text style={{ fontSize: 25, color: 'red' }}>First Detail</Text>
@@ -135,7 +135,7 @@ class App extends React.Component {
     response: {},
   }
   componentDidMount() {
-    DeepLinking.addScheme('example://');
+    DeepLinking.addScheme('testapp://');
     Linking.addEventListener('url', this.handleUrl);
 
     DeepLinking.addRoute('/FirstDetail', (response) => {
