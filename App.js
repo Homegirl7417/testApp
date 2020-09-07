@@ -44,7 +44,7 @@ export default class App extends Component {
         DeepLinking.evaluateUrl(url);
       }
     });
-  }s
+  }
 
   render() {
     return (
