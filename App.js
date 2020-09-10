@@ -1,86 +1,69 @@
-import React, { Component } from 'react';
-import { Button, Linking, StyleSheet, Text, View } from 'react-native';
-import DeepLinking from 'react-native-deep-linking';
+import React, { useState } from 'react';
+import X, {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  TouchableOpacity,
+  PanResponder,
+  Animated
+} from 'react-native';
 
-export default class App extends Component {
-  state = {
-    response: {},
-  };
 
-  componentDidMount() {
-    DeepLinking.addScheme('example://');
-    Linking.addEventListener('url', this.handleUrl);
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
-    DeepLinking.addRoute('/test', (response) => {
-      console.log('res: ', response);
-      // example://test
-      this.setState({ response });
-    });
-
-    DeepLinking.addRoute('/test/:id', (response) => {
-      // example://test/23
-      this.setState({ response });
-    });
-
-    DeepLinking.addRoute('/test/:id/details', (response) => {
-      // example://test/100/details
-      this.setState({ response });
-    });
-
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        Linking.openURL(url);
-      }
-    }).catch(err => console.error('An error occurred', err));
-  }
-
-  componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleUrl);
-  }
-
-  handleUrl = ({ url }) => {
-    Linking.canOpenURL(url).then((supported) => {
-      if (supported) {
-        DeepLinking.evaluateUrl(url);
-      }
-    });
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.container}>
-          <Button
-            onPress={() => Linking.openURL('example://test')}
-            title="Open example://test"
-          />
-          <Button
-            onPress={() => Linking.openURL('example://test/23')}
-            title="Open example://test/23"
-          />
-          <Button
-            onPress={() => Linking.openURL('example://test/100/details')}
-            title="Open example://test/100/details"
-          />
+const App = () => {
+    const pan = useState(new Animated.ValueXY())[0]
+    const panResponder = useState(
+        PanResponder.create({
+            onMoveShouldSetPanResponder: () => true,
+            onPanResponderGrant: () => { // 움직이기 시작할 때 1번 작동
+                console.log('Hello'); 
+                pan.setOffset({
+                    x: pan.x._value,
+                    y: pan.y._value
+                })
+            },
+            onPanResponderMove: (_, gesture) => {
+                pan.x.setValue(gesture.dx)
+                pan.y.setValue(gesture.dy)
+            },
+            // onPanResponderMove: (...args) => {
+            //     console.log('args: ', args[1]);
+            // },
+            // onPanResponderMove: Animated.event([null, {
+            //     dx: pan.x, dy: pan.y
+            // }]),
+            onPanResponderRelease: () => {
+                pan.flattenOffset()
+            }
+        })
+    )[0]
+    console.log(panResponder.panHandlers);
+    return(
+        <View style={{ flex: 1 }}>
+            <Animated.View
+                style={[
+                    {
+                        width: 100,
+                        height: 100,
+                        borderRadius: 100 / 2,
+                        top: pan.y,
+                        left: pan.x,
+                        // marginLeft: leftValue, //이런 식으로, margin을 줘서 화면에서 쫓아낼 수도 있음 
+                        // opacity: leftValue, //이런 식으로, opacity를 이용해 화면에 천천히 등장함
+                        // transform: [{ // 이런 식으로, useNativeDriver가 true인 경우, margin을 사용하고 싶을 때
+                        //     translateX:leftValue 
+                        // }],
+                        backgroundColor: 'red'
+                    },
+                    // pan.getLayout()
+                ]}
+                {...panResponder.panHandlers}
+            />
         </View>
-        <View style={styles.container}>
-          <Text style={styles.text}>{this.state.response.scheme ? `Url scheme: ${this.state.response.scheme}` : ''}</Text>
-          <Text style={styles.text}>{this.state.response.path ? `Url path: ${this.state.response.path}` : ''}</Text>
-          <Text style={styles.text}>{this.state.response.id ? `Url id: ${this.state.response.id}` : ''}</Text>
-        </View>
-      </View>
     );
-  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    margin: 10,
-  },
-});
+export default App;

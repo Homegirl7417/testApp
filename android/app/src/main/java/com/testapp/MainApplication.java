@@ -41,11 +41,23 @@ public class MainApplication extends Application implements ReactApplication {
     return mReactNativeHost;
   }
 
+    // @Override
+    // public void onCreate(Bundle savedInstanceState) {
+    //     super.onCreate(savedInstanceState);
+    //     setContentView(R.layout.main);
+
+    //     Intent intent = getIntent();
+    //     String action = intent.getAction();
+    //     Uri data = intent.getData();
+    // }
+    
+
+  // 원본
   @Override
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+    // initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
   }
 
   /**
